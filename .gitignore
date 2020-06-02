@@ -3,3 +3,4 @@ bin
 obj
 appsettings.json
 **.db
+**/package-lock.json
