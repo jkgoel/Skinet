@@ -5,7 +5,7 @@
     class="img-fluid bg-info"
   />
   <div class="card-body">
-    <a href="#">
+    <a routerLink="/shop/{{ product.id }}">
       <h6 class="text-uppercase">{{ product.name }}</h6>
     </a>
     <span class="mr-4 mb-2">{{ product.price | currency }}</span>
@@ -14,7 +14,11 @@
       <button type="button" class="btn btn-outline-secondary mr-2">
         <fa-icon [icon]="faShoppingCart"></fa-icon>
       </button>
-      <button type="button" class="btn btn-outline-secondary">
+      <button
+        routerLink="/shop/{{ product.id }}"
+        type="button"
+        class="btn btn-outline-secondary"
+      >
         View
       </button>
     </div>
