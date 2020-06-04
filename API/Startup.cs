@@ -29,7 +29,7 @@ namespace API
         {
             services.AddAutoMapper(typeof(MappingProfiles));
             services.AddDbContext<StoreContext>(opt => opt.UseSqlite(_configuration.GetConnectionString("DefaultConnection")));
-            services.AddSingleton<ConnectionMultiplexer>(_ =>
+            services.AddSingleton<IConnectionMultiplexer>(_ =>
             {
                 var configuration = ConfigurationOptions.Parse(_configuration.GetConnectionString("Redis"), true);
                 return ConnectionMultiplexer.Connect(configuration);
