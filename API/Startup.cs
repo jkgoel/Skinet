@@ -9,6 +9,7 @@ using API.Middleware;
 using AutoMapper;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Cors.Infrastructure;
+using StackExchange.Redis;
 
 namespace API
 {
@@ -28,6 +29,11 @@ namespace API
         {
             services.AddAutoMapper(typeof(MappingProfiles));
             services.AddDbContext<StoreContext>(opt => opt.UseSqlite(_configuration.GetConnectionString("DefaultConnection")));
+            services.AddSingleton<ConnectionMultiplexer>(_ =>
+            {
+                var configuration = ConfigurationOptions.Parse(_configuration.GetConnectionString("Redis"), true);
+                return ConnectionMultiplexer.Connect(configuration);
+            });
             services.AddControllers();
             services.AddApplicationServices();
             services.AddSwaggerDocumentation();

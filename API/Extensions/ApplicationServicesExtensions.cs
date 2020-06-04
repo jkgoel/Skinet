@@ -7,34 +7,35 @@ using Infrastructure.Data;
 
 namespace API.Extensions
 {
-  public static class ApplicationServicesExtensions
-  {
-    public static IServiceCollection AddApplicationServices(this IServiceCollection services)
+    public static class ApplicationServicesExtensions
     {
-
-      services.AddScoped<IProductRepository, ProductRepository>();
-      services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-
-      services.Configure<ApiBehaviorOptions>(options =>
-      {
-        options.InvalidModelStateResponseFactory = actionContext =>
+        public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-          var errors = actionContext.ModelState
-                      .Where(e => e.Value.Errors.Count > 0)
-                      .SelectMany(x => x.Value.Errors)
-                      .Select(x => x.ErrorMessage).ToArray();
 
-          var errorResponse = new ApiValidationErrorResponse
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IBasketRepository, BasketRepository>();
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.InvalidModelStateResponseFactory = actionContext =>
           {
-            Errors = errors
+              var errors = actionContext.ModelState
+                    .Where(e => e.Value.Errors.Count > 0)
+                    .SelectMany(x => x.Value.Errors)
+                    .Select(x => x.ErrorMessage).ToArray();
+
+              var errorResponse = new ApiValidationErrorResponse
+              {
+                  Errors = errors
+              };
+
+              return new BadRequestObjectResult(errorResponse);
+
           };
+            });
 
-          return new BadRequestObjectResult(errorResponse);
-
-        };
-      });
-
-      return services;
+            return services;
+        }
     }
-  }
 }
