@@ -7,10 +7,10 @@
       <h3>{{ product.name }}</h3>
       <p style="font-size: 1.5em;">{{ product.price | currency }}</p>
       <div class="d-flex justify-content-start align-items-center mb-2">
-        <fa-icon [icon]="minus" ngClass="text-warning mr-2" size="2x"></fa-icon>
-        <span class="font-weight-bold" style="font-size: 1.5em;">2</span>
-        <fa-icon [icon]="plus" ngClass="text-warning mx-2" size="2x"></fa-icon>
-        <button class="btn btn-outline-secondary btn-lg ml-4">Add to Cart</button>
+        <fa-icon [icon]="minus" ngClass="text-warning mr-2" size="2x" (click)="decremenItemQuantity()"></fa-icon>
+        <span class="font-weight-bold" style="font-size: 1.5em;">{{quantity}}</span>
+        <fa-icon [icon]="plus" ngClass="text-warning mx-2" size="2x" (click)="incremenItemQuantity()"></fa-icon>
+        <button class="btn btn-outline-primary btn-lg ml-4" (click)="addItemToBasket()">Add to Cart</button>
       </div>
       <div class="row">
         <div class="col-12">

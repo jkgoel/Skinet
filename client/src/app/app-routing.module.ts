@@ -28,6 +28,20 @@ const routes: Routes = [
       import('./shop/shop.module').then((module) => module.ShopModule),
     data: { breadcrumb: 'Shop' },
   },
+  {
+    path: 'basket',
+    loadChildren: () =>
+      import('./basket/basket.module').then((module) => module.BasketModule),
+    data: { breadcrumb: 'Basket' },
+  },
+  {
+    path: 'checkout',
+    loadChildren: () =>
+      import('./checkout/checkout.module').then(
+        (module) => module.CheckoutModule
+      ),
+    data: { breadcrumb: 'Checkout' },
+  },
   { path: '**', redirectTo: 'not-found', pathMatch: 'full' },
 ];
 
