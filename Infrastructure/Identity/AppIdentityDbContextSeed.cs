@@ -19,7 +19,7 @@ namespace Infrastructure.Identity
                     Address = new Address
                     {
                         FirstName = "Bob",
-                        LasttName = "Bobbity",
+                        LastName = "Bobbity",
                         Street = "10th Street",
                         City = "New York",
                         State = "NY",
