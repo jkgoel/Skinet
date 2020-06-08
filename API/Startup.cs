@@ -10,6 +10,7 @@ using AutoMapper;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using StackExchange.Redis;
+using Infrastructure.Identity;
 
 namespace API
 {
@@ -29,6 +30,7 @@ namespace API
         {
             services.AddAutoMapper(typeof(MappingProfiles));
             services.AddDbContext<StoreContext>(opt => opt.UseSqlite(_configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<AppIdentityDbContext>(opt => opt.UseSqlite(_configuration.GetConnectionString("IdentityConnection")));
             services.AddSingleton<IConnectionMultiplexer>(_ =>
             {
                 var configuration = ConfigurationOptions.Parse(_configuration.GetConnectionString("Redis"), true);
@@ -36,6 +38,7 @@ namespace API
             });
             services.AddControllers();
             services.AddApplicationServices();
+            services.AddIdentityServices(_configuration);
             services.AddSwaggerDocumentation();
             services.AddCors(options =>
             {
@@ -64,6 +67,8 @@ namespace API
             app.UseStaticFiles();
 
             app.UseCors("CorsPolicy");
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
