@@ -50,10 +50,10 @@ export class ProductDetailsComponent implements OnInit {
   addItemToBasket() {
     this.basketService.addItemToBasket(this.product, this.quantity);
   }
-  incremenItemQuantity(item: IBasketItem) {
+  incremenItemQuantity() {
     this.quantity++;
   }
-  decremenItemQuantity(item: IBasketItem) {
+  decremenItemQuantity() {
     if (this.quantity > 1) {
       this.quantity--;
     }
