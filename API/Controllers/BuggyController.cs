@@ -31,7 +31,7 @@ namespace API.Controllers
         public ActionResult GetServerError()
         {
             var thing = _context.Products.Find(42);
-            var thingToReturn = thing.ToString();
+            thing.ToString();
             return Ok();
         }
         [HttpGet("badrequest")]
@@ -42,7 +42,7 @@ namespace API.Controllers
         [HttpGet("badrequest/{id}")]
         public ActionResult GetNotFoundRequest(int id)
         {
-            return Ok();
+            return Ok(id);
         }
 
 
