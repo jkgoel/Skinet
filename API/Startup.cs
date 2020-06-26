@@ -1,3 +1,4 @@
+using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ using Infrastructure.Data;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using StackExchange.Redis;
 using Infrastructure.Identity;
+using Microsoft.Extensions.FileProviders;
 
 namespace API
 {
@@ -23,14 +25,22 @@ namespace API
 
         }
 
-        //public IConfiguration Configuration { get; }
+        public void ConfigureDevelopmentServices(IServiceCollection services)
+        {
+            services.AddDbContext<StoreContext>(opt => opt.UseSqlite(_configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<AppIdentityDbContext>(opt => opt.UseSqlite(_configuration.GetConnectionString("IdentityConnection")));
+            ConfigureServices(services);
+        }
+        public void ConfigureProductionServices(IServiceCollection services)
+        {
+            services.AddDbContext<StoreContext>(opt => opt.UseMySql(_configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<AppIdentityDbContext>(opt => opt.UseMySql(_configuration.GetConnectionString("IdentityConnection")));
+            ConfigureServices(services);
+        }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(typeof(MappingProfiles));
-            services.AddDbContext<StoreContext>(opt => opt.UseSqlite(_configuration.GetConnectionString("DefaultConnection")));
-            services.AddDbContext<AppIdentityDbContext>(opt => opt.UseSqlite(_configuration.GetConnectionString("IdentityConnection")));
             services.AddSingleton<IConnectionMultiplexer>(_ =>
             {
                 var configuration = ConfigurationOptions.Parse(_configuration.GetConnectionString("Redis"), true);
@@ -49,6 +59,8 @@ namespace API
             });
         }
 
+
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app)
         {
@@ -66,6 +78,12 @@ namespace API
 
             app.UseStaticFiles();
 
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Content")),
+                RequestPath = "/content"
+            });
+
             app.UseCors("CorsPolicy");
 
             app.UseAuthentication();
@@ -77,6 +95,7 @@ namespace API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapFallbackToController("Index", "Fallback");
             });
         }
     }

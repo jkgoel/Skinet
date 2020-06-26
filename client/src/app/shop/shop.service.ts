@@ -1,3 +1,4 @@
+import { environment } from './../../environments/environment';
 import { ShopParams } from './../shared/models/shopParams';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -13,7 +14,7 @@ import { of } from 'rxjs';
   providedIn: 'root',
 })
 export class ShopService {
-  baseUrl = 'https://localhost:5001/api/';
+  baseUrl = environment.apiUrl;
   products: IProduct[] = [];
   brands: IBrand[] = [];
   types: IProductType[] = [];
@@ -81,7 +82,6 @@ export class ShopService {
 
   getProduct(id: number) {
     const product = this.products.find((p) => p.id === +id);
-    console.log(product);
     if (product) {
       return of(product);
     }

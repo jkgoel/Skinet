@@ -4,3 +4,5 @@ obj
 appsettings.json
 **.db
 **/package-lock.json
+publish
+wwwroot
