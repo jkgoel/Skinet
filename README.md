@@ -1,5 +1,9 @@
 # Skinet
 Angular and .Net Core E-Commerce app
 
-###This is a sample app created for e-commerce base on Asp.Net Core & Angular
+### Technology stack used
+
+* ASP.Net Core 3.1
+* Angular 9
+* MySQL
 
