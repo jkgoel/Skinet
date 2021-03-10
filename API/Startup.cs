@@ -1,18 +1,17 @@
 using System.IO;
+using API.Extensions;
+using API.Helpers;
+using API.Middleware;
+using Infrastructure.Data;
+using Infrastructure.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using API.Extensions;
-using API.Helpers;
-using API.Middleware;
-using AutoMapper;
-using Infrastructure.Data;
-using Microsoft.AspNetCore.Cors.Infrastructure;
-using StackExchange.Redis;
-using Infrastructure.Identity;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Hosting;
+using StackExchange.Redis;
 
 namespace API
 {
@@ -25,21 +24,10 @@ namespace API
 
         }
 
-        public void ConfigureDevelopmentServices(IServiceCollection services)
-        {
-            services.AddDbContext<StoreContext>(opt => opt.UseSqlite(_configuration.GetConnectionString("DefaultConnection")));
-            services.AddDbContext<AppIdentityDbContext>(opt => opt.UseSqlite(_configuration.GetConnectionString("IdentityConnection")));
-            ConfigureServices(services);
-        }
-        public void ConfigureProductionServices(IServiceCollection services)
-        {
-            services.AddDbContext<StoreContext>(opt => opt.UseMySql(_configuration.GetConnectionString("DefaultConnection")));
-            services.AddDbContext<AppIdentityDbContext>(opt => opt.UseMySql(_configuration.GetConnectionString("IdentityConnection")));
-            ConfigureServices(services);
-        }
-
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<StoreContext>(opt => opt.UseNpgsql(_configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<AppIdentityDbContext>(opt => opt.UseNpgsql(_configuration.GetConnectionString("IdentityConnection")));
             services.AddAutoMapper(typeof(MappingProfiles));
             services.AddSingleton<IConnectionMultiplexer>(_ =>
             {
@@ -62,12 +50,14 @@ namespace API
 
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            // if (env.IsDevelopment())
-            // {
-            //   app.UseDeveloperExceptionPage();
-            // }
+            if (env.IsDevelopment())
+            {
+                //app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
+            }
             app.UseMiddleware<ExceptionMiddleware>();
 
             app.UseStatusCodePagesWithReExecute("/errors/{0}");

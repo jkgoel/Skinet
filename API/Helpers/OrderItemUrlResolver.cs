@@ -1,8 +1,7 @@
-using Microsoft.Extensions.Configuration;
 using API.DTO;
 using AutoMapper;
-using Core.Entities;
 using Core.Entities.OrderAggregate;
+using Microsoft.Extensions.Configuration;
 
 namespace API.Helpers
 {
