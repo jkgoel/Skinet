@@ -60,6 +60,8 @@ namespace API
 
             app.UseRouting();
 
+            app.UseDefaultFiles();
+
             app.UseStaticFiles();
 
             app.UseStaticFiles(new StaticFileOptions
