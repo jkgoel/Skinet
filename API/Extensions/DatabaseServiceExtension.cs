@@ -38,7 +38,7 @@ namespace API.Extensions
                 }
                 else
                 {
-                    connectionString = GetConnectionString("HEROKU_POSTGRESQL_CYAN_URL");
+                    connectionString = GetConnectionString("HEROKU_POSTGRESQL_CHARCOAL_URL");
                 }
 
                 opt.UseNpgsql(connectionString);

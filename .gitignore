@@ -5,5 +5,4 @@ appsettings.json
 **.db
 **/package-lock.json
 publish
-wwwroot
 .vs/skinet/DesignTimeBuild/.dtbcache.v2
