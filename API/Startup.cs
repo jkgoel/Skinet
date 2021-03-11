@@ -26,14 +26,8 @@ namespace API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<StoreContext>(opt => opt.UseNpgsql(_configuration.GetConnectionString("DefaultConnection")));
-            services.AddDbContext<AppIdentityDbContext>(opt => opt.UseNpgsql(_configuration.GetConnectionString("IdentityConnection")));
+            services.AddDatabaseServices(_configuration);
             services.AddAutoMapper(typeof(MappingProfiles));
-            services.AddSingleton<IConnectionMultiplexer>(_ =>
-            {
-                var configuration = ConfigurationOptions.Parse(_configuration.GetConnectionString("Redis"), true);
-                return ConnectionMultiplexer.Connect(configuration);
-            });
             services.AddControllers();
             services.AddApplicationServices();
             services.AddIdentityServices(_configuration);
