@@ -53,7 +53,8 @@ namespace API.Extensions
                 }
                 else
                 {
-                    configuration = ConfigurationOptions.Parse(Environment.GetEnvironmentVariable("REDIS_URL"), true);
+                    var tokens = Environment.GetEnvironmentVariable("REDIS_URL").Split(':', '@');
+                    configuration = ConfigurationOptions.Parse(string.Format("{0}:{1},password={2}", tokens[3], tokens[4], tokens[2]), true);
                 }
 
                 return ConnectionMultiplexer.Connect(configuration);
